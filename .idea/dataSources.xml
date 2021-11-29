@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="aimp@172.16.20.59" uuid="1c425b3f-952c-4a25-9df6-61779d609848">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://172.16.20.59:3306/aimp</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="jdbc:mysql://localhost:3306/aimp?serverTimezone=Asia/Shanghai" uuid="787aa657-477d-40a5-869e-bde3b4beb0fa">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/aimp?serverTimezone=Asia/Shanghai</jdbc-url>
+    </data-source>
+  </component>
+</project>

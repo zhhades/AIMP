@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+">
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <!--    数据库源  也可以用文件的方式进行 配置  -->
+    <bean id="MyDatasources" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <!-- 配置连接池属性 -->
+        <property name="driverClass" value="${driver}"/>
+        <property name="jdbcUrl" value="${url}"/>
+        <property name="user" value="root"/>
+        <property name="password" value="root"/>
+        <!-- c3p0连接池的私有属性 -->
+        <property name="maxPoolSize" value="30"/>
+        <property name="minPoolSize" value="1"/>
+        <!-- 关闭连接后不自动commit -->
+        <property name="autoCommitOnClose" value="false"/>
+        <!-- 获取连接超时时间 -->
+        <property name="checkoutTimeout" value="10000"/>
+        <!-- 当获取连接失败重试次数 -->
+        <property name="acquireRetryAttempts" value="2"/>
+    </bean>
+    <!--    声明的是mybatis中提供的SqlSessionFactoryBean类,这个给类内部创建SqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" >
+        <property name="dataSource" ref="MyDatasources" />
+        <!--        mybatis主配置文件的位置
+                       configLocation是Resource类型,读取配置文件
+                       它的复制，使用value，指定文件路径，使用的是classpath:文件路径-->
+        <property name="configLocation" value="classpath:mybatis.xml" />
+    </bean>
+    <!--    创建dao对象,使用sqlSession的getMapper(UserDao.class)
+                 MapperScannerConfigurer:内部调用getMapper()生成每个Dao的代理对象-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer" >
+        <!--        指定qlSessionFactory对象的name-->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <!--        指定包名,名字是dao接口所在的的包名
+                MapperScannerConfigurer会扫描这个包所有的接口,把每个接口执行一次getMapper()方法得到每个dao对象.
+                创建好的对象放入到Spring容器中-->
+        <property name="basePackage" value="cn.neu.aimp.iot.dao" />
+    </bean>
+    <!--    扫描器:扫描指定的包-->
+    <context:component-scan base-package="cn.neu.aimp.iot" />
+    <!--    Spring事物 注解实现-->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+    <bean id="transactionManager" class="org.springframework.jdbc.support.JdbcTransactionManager">
+        <property name="dataSource" ref="MyDatasources"></property>
+    </bean>
+</beans>

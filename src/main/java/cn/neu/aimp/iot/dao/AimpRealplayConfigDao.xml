@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.neu.aimp.iot.dao.AimpRealplayConfigDao">
+
+    <resultMap type="cn.neu.aimp.iot.entity.AimpRealplayConfig" id="AimpRealplayConfigMap">
+        <result property="ip" column="ip" jdbcType="VARCHAR"/>
+        <result property="channelNum" column="channel_num" jdbcType="INTEGER"/>
+        <result property="dwStreamType" column="dw_stream_type" jdbcType="INTEGER"/>
+        <result property="dwLinkMode" column="dw_link_mode" jdbcType="INTEGER"/>
+        <result property="bBlocked" column="b_blocked" jdbcType="INTEGER"/>
+        <result property="isImgStream" column="is_img_Stream" jdbcType="INTEGER"/>
+        <result property="pendingListMaxSize" column="pending_list_max_size" jdbcType="INTEGER"/>
+        <result property="processedListMaxSize" column="processed_list_max_size" jdbcType="INTEGER"/>
+        <result property="isSaveFile" column="is_save_file" jdbcType="INTEGER"/>
+        <result property="filePath" column="file_path" jdbcType="VARCHAR"/>
+        <result property="isForward" column="is_forward" jdbcType="INTEGER"/>
+        <result property="streamMediaIp" column="stream_media_ip" jdbcType="VARCHAR"/>
+        <result property="isPtzControl" column="is_ptz_control" jdbcType="INTEGER"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="AimpRealplayConfigMap">
+        select
+          ip, channel_num, dw_stream_type, dw_link_mode, b_blocked, is_img_Stream, pending_list_max_size, processed_list_max_size, is_save_file, file_path, is_forward, stream_media_ip, is_ptz_control, remark
+        from aimp.aimp_realplay_config
+        where ip = #{ip}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="AimpRealplayConfigMap">
+        select
+          ip, channel_num, dw_stream_type, dw_link_mode, b_blocked, is_img_Stream, pending_list_max_size, processed_list_max_size, is_save_file, file_path, is_forward, stream_media_ip, is_ptz_control, remark
+        from aimp.aimp_realplay_config
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="AimpRealplayConfigMap">
+        select
+        ip, channel_num, dw_stream_type, dw_link_mode, b_blocked, is_img_Stream, pending_list_max_size,
+        processed_list_max_size, is_save_file, file_path, is_forward, stream_media_ip, is_ptz_control, remark
+        from aimp.aimp_realplay_config
+        <where>
+            <if test="ip != null and ip != ''">
+                and ip = #{ip}
+            </if>
+            <if test="channelNum != null">
+                and channel_num = #{channelNum}
+            </if>
+            <if test="dwStreamType != null">
+                and dw_stream_type = #{dwStreamType}
+            </if>
+            <if test="dwLinkMode != null">
+                and dw_link_mode = #{dwLinkMode}
+            </if>
+            <if test="bBlocked != null">
+                and b_blocked = #{bBlocked}
+            </if>
+            <if test="isImgStream != null">
+                and is_img_Stream = #{isImgStream}
+            </if>
+            <if test="pendingListMaxSize != null">
+                and pending_list_max_size = #{pendingListMaxSize}
+            </if>
+            <if test="processedListMaxSize != null">
+                and processed_list_max_size = #{processedListMaxSize}
+            </if>
+            <if test="isSaveFile != null">
+                and is_save_file = #{isSaveFile}
+            </if>
+            <if test="filePath != null and filePath != ''">
+                and file_path = #{filePath}
+            </if>
+            <if test="isForward != null">
+                and is_forward = #{isForward}
+            </if>
+            <if test="streamMediaIp != null and streamMediaIp != ''">
+                and stream_media_ip = #{streamMediaIp}
+            </if>
+            <if test="isPtzControl != null">
+                and is_ptz_control = #{isPtzControl}
+            </if>
+            <if test="remark != null and remark != ''">
+                and remark = #{remark}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="ip" useGeneratedKeys="true">
+        insert into aimp.aimp_realplay_config(channel_num, dw_stream_type, dw_link_mode, b_blocked, is_img_Stream, pending_list_max_size, processed_list_max_size, is_save_file, file_path, is_forward, stream_media_ip, is_ptz_control, remark)
+        values (#{channelNum}, #{dwStreamType}, #{dwLinkMode}, #{bBlocked}, #{isImgStream}, #{pendingListMaxSize}, #{processedListMaxSize}, #{isSaveFile}, #{filePath}, #{isForward}, #{streamMediaIp}, #{isPtzControl}, #{remark})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="ip" useGeneratedKeys="true">
+        insert into aimp.aimp_realplay_config(channel_num, dw_stream_type, dw_link_mode, b_blocked, is_img_Stream,
+        pending_list_max_size, processed_list_max_size, is_save_file, file_path, is_forward, stream_media_ip,
+        is_ptz_control, remark)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.channelNum}, #{entity.dwStreamType}, #{entity.dwLinkMode}, #{entity.bBlocked},
+            #{entity.isImgStream}, #{entity.pendingListMaxSize}, #{entity.processedListMaxSize}, #{entity.isSaveFile},
+            #{entity.filePath}, #{entity.isForward}, #{entity.streamMediaIp}, #{entity.isPtzControl}, #{entity.remark})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="ip" useGeneratedKeys="true">
+        insert into aimp.aimp_realplay_config(channel_num, dw_stream_type, dw_link_mode, b_blocked, is_img_Stream,
+        pending_list_max_size, processed_list_max_size, is_save_file, file_path, is_forward, stream_media_ip,
+        is_ptz_control, remark)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.channelNum}, #{entity.dwStreamType}, #{entity.dwLinkMode}, #{entity.bBlocked},
+            #{entity.isImgStream}, #{entity.pendingListMaxSize}, #{entity.processedListMaxSize}, #{entity.isSaveFile},
+            #{entity.filePath}, #{entity.isForward}, #{entity.streamMediaIp}, #{entity.isPtzControl}, #{entity.remark})
+        </foreach>
+        on duplicate key update
+        channel_num = values(channel_num) , dw_stream_type = values(dw_stream_type) , dw_link_mode =
+        values(dw_link_mode) , b_blocked = values(b_blocked) , is_img_Stream = values(is_img_Stream) ,
+        pending_list_max_size = values(pending_list_max_size) , processed_list_max_size =
+        values(processed_list_max_size) , is_save_file = values(is_save_file) , file_path = values(file_path) ,
+        is_forward = values(is_forward) , stream_media_ip = values(stream_media_ip) , is_ptz_control =
+        values(is_ptz_control) , remark = values(remark)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update aimp.aimp_realplay_config
+        <set>
+            <if test="channelNum != null">
+                channel_num = #{channelNum},
+            </if>
+            <if test="dwStreamType != null">
+                dw_stream_type = #{dwStreamType},
+            </if>
+            <if test="dwLinkMode != null">
+                dw_link_mode = #{dwLinkMode},
+            </if>
+            <if test="bBlocked != null">
+                b_blocked = #{bBlocked},
+            </if>
+            <if test="isImgStream != null">
+                is_img_Stream = #{isImgStream},
+            </if>
+            <if test="pendingListMaxSize != null">
+                pending_list_max_size = #{pendingListMaxSize},
+            </if>
+            <if test="processedListMaxSize != null">
+                processed_list_max_size = #{processedListMaxSize},
+            </if>
+            <if test="isSaveFile != null">
+                is_save_file = #{isSaveFile},
+            </if>
+            <if test="filePath != null and filePath != ''">
+                file_path = #{filePath},
+            </if>
+            <if test="isForward != null">
+                is_forward = #{isForward},
+            </if>
+            <if test="streamMediaIp != null and streamMediaIp != ''">
+                stream_media_ip = #{streamMediaIp},
+            </if>
+            <if test="isPtzControl != null">
+                is_ptz_control = #{isPtzControl},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+        </set>
+        where ip = #{ip}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from aimp.aimp_realplay_config where ip = #{ip}
+    </delete>
+
+</mapper>

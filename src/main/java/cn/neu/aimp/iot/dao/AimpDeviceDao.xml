@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.neu.aimp.iot.dao.AimpDeviceDao">
+
+    <resultMap type="cn.neu.aimp.iot.entity.AimpDevice" id="AimpDeviceMap">
+        <result property="deviceId" column="device_id" jdbcType="VARCHAR"/>
+        <result property="ip" column="ip" jdbcType="VARCHAR"/>
+        <result property="port" column="port" jdbcType="INTEGER"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="deviceName" column="device_name" jdbcType="VARCHAR"/>
+        <result property="deviceType" column="device_type" jdbcType="VARCHAR"/>
+        <result property="firstDir" column="first_dir" jdbcType="VARCHAR"/>
+        <result property="secondDir" column="second_dir" jdbcType="VARCHAR"/>
+        <result property="location" column="location" jdbcType="VARCHAR"/>
+        <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP"/>
+        <result property="currentState" column="current_state" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="AimpDeviceMap">
+        select
+          device_id, ip, port, user_name, password, device_name, device_type, first_dir, second_dir, location, last_login_time, current_state
+        from aimp.aimp_device
+        where device_id = #{deviceId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="AimpDeviceMap">
+        select
+          device_id, ip, port, user_name, password, device_name, device_type, first_dir, second_dir, location, last_login_time, current_state
+        from aimp.aimp_device
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="AimpDeviceMap">
+        select
+        device_id, ip, port, user_name, password, device_name, device_type, first_dir, second_dir, location,
+        last_login_time, current_state
+        from aimp.aimp_device
+        <where>
+            <if test="deviceId != null and deviceId != ''">
+                and device_id = #{deviceId}
+            </if>
+            <if test="ip != null and ip != ''">
+                and ip = #{ip}
+            </if>
+            <if test="port != null">
+                and port = #{port}
+            </if>
+            <if test="userName != null and userName != ''">
+                and user_name = #{userName}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="deviceName != null and deviceName != ''">
+                and device_name = #{deviceName}
+            </if>
+            <if test="deviceType != null and deviceType != ''">
+                and device_type = #{deviceType}
+            </if>
+            <if test="firstDir != null and firstDir != ''">
+                and first_dir = #{firstDir}
+            </if>
+            <if test="secondDir != null and secondDir != ''">
+                and second_dir = #{secondDir}
+            </if>
+            <if test="location != null and location != ''">
+                and location = #{location}
+            </if>
+            <if test="lastLoginTime != null">
+                and last_login_time = #{lastLoginTime}
+            </if>
+            <if test="currentState != null and currentState != ''">
+                and current_state = #{currentState}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="deviceId" useGeneratedKeys="true">
+        replace into aimp.aimp_device(device_id, ip, port, user_name, password, device_name, device_type, first_dir, second_dir, location, last_login_time, current_state)
+        values (#{deviceId}, #{ip}, #{port}, #{userName}, #{password}, #{deviceName}, #{deviceType}, #{firstDir}, #{secondDir}, #{location}, #{lastLoginTime}, #{currentState})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="deviceId" useGeneratedKeys="true">
+        insert into aimp.aimp_device(ip, port, user_name, password, device_name, device_type, first_dir, second_dir,
+        location, last_login_time, current_state)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.ip}, #{entity.port}, #{entity.userName}, #{entity.password}, #{entity.deviceName},
+            #{entity.deviceType}, #{entity.firstDir}, #{entity.secondDir}, #{entity.location}, #{entity.lastLoginTime},
+            #{entity.currentState})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="deviceId" useGeneratedKeys="true">
+        insert into aimp.aimp_device(ip, port, user_name, password, device_name, device_type, first_dir, second_dir,
+        location, last_login_time, current_state)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.ip}, #{entity.port}, #{entity.userName}, #{entity.password}, #{entity.deviceName},
+            #{entity.deviceType}, #{entity.firstDir}, #{entity.secondDir}, #{entity.location}, #{entity.lastLoginTime},
+            #{entity.currentState})
+        </foreach>
+        on duplicate key update
+        ip = values(ip) , port = values(port) , user_name = values(user_name) , password = values(password) ,
+        device_name = values(device_name) , device_type = values(device_type) , first_dir = values(first_dir) ,
+        second_dir = values(second_dir) , location = values(location) , last_login_time = values(last_login_time) ,
+        current_state = values(current_state)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update aimp.aimp_device
+        <set>
+            <if test="ip != null and ip != ''">
+                ip = #{ip},
+            </if>
+            <if test="port != null">
+                port = #{port},
+            </if>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="deviceName != null and deviceName != ''">
+                device_name = #{deviceName},
+            </if>
+            <if test="deviceType != null and deviceType != ''">
+                device_type = #{deviceType},
+            </if>
+            <if test="firstDir != null and firstDir != ''">
+                first_dir = #{firstDir},
+            </if>
+            <if test="secondDir != null and secondDir != ''">
+                second_dir = #{secondDir},
+            </if>
+            <if test="location != null and location != ''">
+                location = #{location},
+            </if>
+            <if test="lastLoginTime != null">
+                last_login_time = #{lastLoginTime},
+            </if>
+            <if test="currentState != null and currentState != ''">
+                current_state = #{currentState},
+            </if>
+        </set>
+        where device_id = #{deviceId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from aimp.aimp_device where device_id = #{deviceId}
+    </delete>
+
+</mapper>
